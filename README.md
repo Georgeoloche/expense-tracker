@@ -174,11 +174,7 @@ Junior Flutter Developer | Building for Africa 🌍
 [![GitHub](https://img.shields.io/badge/GitHub-Georgeoloche-181717?style=flat&logo=github)](https://github.com/Georgeoloche)
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-George%20Oloche-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/georgeoloche)
 
----
 
-## 📄 License
-
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
