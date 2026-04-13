@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:uuid/uuid.dart';
@@ -44,25 +43,31 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
 
   Future<void> _saveExpense() async {
     if (!_formKey.currentState!.validate()) return;
+    
     setState(() => _isSaving = true);
 
-    if (_isEditing) {
-      await _datasource.deleteExpense(widget.expense!.id);
+    try {
+      // Logic: If editing, keep the original ID and Date. If new, generate them.
+      final expense = Expense(
+        id: _isEditing ? widget.expense!.id : _uuid.v4(),
+        amount: double.parse(_amountController.text.trim()),
+        category: _selectedCategory,
+        note: _noteController.text.trim().isEmpty 
+            ? null 
+            : _noteController.text.trim(),
+        date: _isEditing ? widget.expense!.date : DateTime.now(),
+      );
+
+      // Hive's .put automatically handles both Creating and Updating based on the ID
+      await _datasource.addExpense(expense);
+      
+      if (mounted) Navigator.of(context).pop();
+    } catch (e) {
+      debugPrint("Error saving expense: $e");
+      // Optional: Show a SnackBar here if you want to notify the user of an error
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
-
-    final expense = Expense(
-      id: _isEditing ? widget.expense!.id : _uuid.v4(),
-      amount: double.parse(_amountController.text.trim()),
-      category: _selectedCategory,
-      note: _noteController.text.trim().isEmpty
-          ? null
-          : _noteController.text.trim(),
-      date: _isEditing ? widget.expense!.date : DateTime.now(),
-    );
-
-    await _datasource.addExpense(expense);
-    setState(() => _isSaving = false);
-    if (mounted) Navigator.of(context).pop();
   }
 
   Color _getCategoryColor(String category) {
